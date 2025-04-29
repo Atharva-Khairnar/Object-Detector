@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center" id="result-container">
+    <div class="col-lg-10">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-4">
+                    <h1 class="card-title mb-0 me-auto">Detection Results</h1>
+                    {% if detection_type == 'cartoon' %}
+                    <span class="badge bg-info px-3 py-2">
+                        <i class="fas fa-paint-brush me-1"></i> Cartoon Mode
+                    </span>
+                    {% else %}
+                    <span class="badge bg-primary px-3 py-2">
+                        <i class="fas fa-camera me-1"></i> Photo Mode
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="result-image-wrapper position-relative">
+                            <div class="result-image-label">
+                                <span>Original Image</span>
+                            </div>
+                            <div class="img-container">
+                                <img src="{{ original_image }}" class="img-fluid rounded" alt="Original Image">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="result-image-wrapper position-relative">
+                            <div class="result-image-label">
+                                <span>Detected Objects</span>
+                            </div>
+                            <div class="img-container">
+                                <img src="{{ result_image }}" class="img-fluid rounded" alt="Detected Objects">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="card bg-dark">
+                            <div class="card-body">
+                                <h4 class="card-title">Detection Summary</h4>
+                                {% if detections %}
+                                    {% if detections|length == 1 and detections[0].class == 'no_objects_detected' %}
+                                        <div class="alert alert-warning">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            <strong>No objects were detected in your image.</strong>
+                                        </div>
+                                        <div class="card bg-dark border-secondary mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Possible Reasons:</h5>
+                                                <ul class="mb-0">
+                                                    <li>The image is a cartoon, animation, or drawing</li>
+                                                    <li>Objects are too small or unclear in the image</li>
+                                                    <li>The lighting or angle makes recognition difficult</li>
+                                                    <li>The objects in the image are not among the 80 recognized categories</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <p>Try uploading a different image with clearer, real-world objects.</p>
+                                    {% else %}
+                                        <p>Found {{ detections|length }} object(s) in the image:</p>
+                                        <ul class="list-group">
+                                            {% for detection in detections %}
+                                                <li class="list-group-item bg-dark detection-item">
+                                                    <span>
+                                                        <span class="color-indicator" style="background-color: {{ detection.color }};"></span>
+                                                        {{ detection.class }}
+                                                    </span>
+                                                    <span class="badge bg-primary">{{ detection.confidence }}</span>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                {% else %}
+                                    <p>No objects detected in the image.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card bg-dark">
+                            <div class="card-body">
+                                <h4 class="card-title">About the Detection</h4>
+                                {% if detection_type == 'cartoon' %}
+                                <div class="mb-2">
+                                    <span class="badge bg-info">Cartoon/Animation Mode</span>
+                                </div>
+                                <p>
+                                    This image was processed using computer vision techniques designed for cartoon and animated content.
+                                    The detector analyzes shapes, colors, and patterns to identify cartoon objects.
+                                </p>
+                                <p>
+                                    Each object is assigned a unique color to help distinguish between different types of objects in the image.
+                                    The confidence score is an estimate based on shape recognition.
+                                </p>
+                                {% else %}
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">Real Photo Mode</span>
+                                </div>
+                                <p>
+                                    This image was processed using YOLOv5, a state-of-the-art object detection model.
+                                    The model can identify up to 80 different types of objects with color-coded bounding boxes.
+                                </p>
+                                <p>
+                                    Each object is assigned a unique color to help distinguish between different types of objects in the image.
+                                    The confidence score (0-1) indicates how certain the model is about each detection.
+                                </p>
+                                {% endif %}
+                                {% if detections %}
+                                    {% if not (detections|length == 1 and detections[0].class == 'no_objects_detected') %}
+                                    <div class="mt-3">
+                                        <h5>Most Common Objects</h5>
+                                        {% set classes = [] %}
+                                        {% for detection in detections %}
+                                            {% if detection.class not in classes and detection.class != 'no_objects_detected' %}
+                                                {% set _ = classes.append(detection.class) %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        <p>Unique object types detected: {{ classes|length }}</p>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            {% for class in classes %}
+                                                <span class="badge bg-secondary">{{ class }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="mt-3">
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-lightbulb me-2"></i>
+                                            <strong>Tips for better detection:</strong>
+                                            <ul class="mb-0 mt-2">
+                                                {% if detection_type == 'cartoon' %}
+                                                <li>Use images with distinct shapes and colors</li>
+                                                <li>Cartoon characters with clear outlines work best</li>
+                                                <li>Simpler cartoon styles may be easier to detect</li>
+                                                <li>Try images with fewer overlapping elements</li>
+                                                {% else %}
+                                                <li>Use high-resolution, well-lit images</li>
+                                                <li>Ensure objects are clearly visible</li> 
+                                                <li>Try real photographs instead of cartoons or drawings</li>
+                                                <li>Position the camera closer to the main objects</li>
+                                                {% endif %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Process Another Image
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+{% endblock %}

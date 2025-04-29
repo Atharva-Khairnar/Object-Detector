@@ -1,0 +1,294 @@
+/* Custom styling in addition to Bootstrap */
+
+:root {
+    --accent-color: #6366f1;
+    --accent-hover: #4f46e5;
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-bg: rgba(30, 30, 35, 0.9);
+    --glow-color: rgba(99, 102, 241, 0.15);
+}
+
+body {
+    background-image: linear-gradient(135deg, #1e1e23 0%, #111114 100%);
+    background-attachment: fixed;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Main container styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Card styling with glass effect */
+.card {
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--card-border);
+    background-color: var(--card-bg);
+    backdrop-filter: blur(10px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+    transform: translateY(-2px);
+}
+
+.card-title {
+    font-weight: 700;
+    background: linear-gradient(90deg, #fff, #ccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Image container with enhanced styling */
+.img-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    background-color: rgba(20, 20, 25, 0.5);
+    transition: transform 0.3s ease;
+}
+
+.img-container:hover {
+    transform: scale(1.01);
+}
+
+.img-fluid {
+    width: 100%;
+    max-height: 600px;
+    object-fit: contain;
+}
+
+/* Modern upload zone */
+.upload-zone {
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: rgba(30, 30, 35, 0.5);
+}
+
+.upload-zone:hover {
+    border-color: var(--accent-color);
+    background-color: rgba(99, 102, 241, 0.08);
+    box-shadow: 0 0 20px var(--glow-color);
+}
+
+.upload-zone.highlight {
+    border-color: var(--accent-color);
+    background-color: rgba(99, 102, 241, 0.12);
+    box-shadow: 0 0 30px var(--glow-color);
+}
+
+/* Upload zone icons and text */
+.upload-zone i {
+    color: var(--accent-color);
+    opacity: 0.9;
+    filter: drop-shadow(0 0 8px var(--glow-color));
+    transition: transform 0.3s ease;
+}
+
+.upload-zone:hover i {
+    transform: translateY(-5px);
+}
+
+/* Enhanced detection list */
+.detection-item {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(30, 30, 35, 0.5);
+    transition: all 0.2s ease;
+}
+
+.detection-item:hover {
+    background-color: rgba(50, 50, 60, 0.5);
+    transform: translateX(3px);
+}
+
+.color-indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Buttons with gradient */
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+    border: none;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+    background: linear-gradient(135deg, var(--accent-hover), var(--accent-color));
+}
+
+/* Badge styling */
+.badge {
+    padding: 6px 10px;
+    font-weight: 500;
+    border-radius: 6px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Tab styling */
+.nav-tabs {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 10px 16px;
+    margin-right: 5px;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-tabs .nav-link.active {
+    color: white;
+    background-color: rgba(99, 102, 241, 0.1);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+/* Loading spinner with glow effect */
+.loading-container {
+    display: none;
+    text-align: center;
+    padding: 30px;
+}
+
+.loading-spinner {
+    border: 4px solid rgba(99, 102, 241, 0.1);
+    border-top: 4px solid var(--accent-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+    box-shadow: 0 0 15px var(--glow-color);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Footer styling */
+footer {
+    margin-top: 40px;
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Animation for alerts */
+.alert {
+    animation: fadeIn 0.5s ease;
+    border-radius: 8px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Detection mode cards */
+.detection-mode-card {
+    position: relative;
+    height: 100%;
+}
+
+.detection-mode-label {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background-color: rgba(30, 30, 35, 0.4);
+}
+
+.detection-mode-label:hover {
+    border-color: rgba(99, 102, 241, 0.5);
+    background-color: rgba(30, 30, 35, 0.6);
+    transform: translateY(-2px);
+}
+
+.btn-check:checked + .detection-mode-label {
+    border-color: var(--accent-color);
+    background-color: rgba(99, 102, 241, 0.15);
+    box-shadow: 0 0 15px var(--glow-color);
+}
+
+.mode-icon {
+    color: var(--accent-color);
+    opacity: 0.9;
+    filter: drop-shadow(0 0 5px var(--glow-color));
+}
+
+.btn-check:checked + .detection-mode-label .mode-icon {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+/* Result page styling */
+.result-image-wrapper {
+    margin-bottom: 15px;
+}
+
+.result-image-label {
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    z-index: 10;
+    background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
+    padding: 5px 15px;
+    border-radius: 20px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.result-image-label span {
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.badge {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 1.5rem;
+    }
+    
+    .upload-zone {
+        padding: 20px;
+    }
+}

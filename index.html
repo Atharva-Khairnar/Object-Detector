@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card bg-dark border-0 shadow">
+            <div class="card-body">
+                <h1 class="card-title text-center mb-4">
+                    <i class="fas fa-eye me-2"></i>Object Detection
+                </h1>
+                <p class="lead text-center mb-4">
+                    Upload an image to detect and label objects with color-coded tags
+                </p>
+                
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <form id="upload-form" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+                            <div id="upload-zone" class="upload-zone mb-3">
+                                <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                                <h4>Drag & Drop Image Here</h4>
+                                <p class="text-muted">or click to browse files</p>
+                                <input type="file" id="file-input" name="file" accept="image/jpeg,image/png" style="display: none;">
+                            </div>
+                            
+                            <div id="preview-container" style="display: none;" class="text-center mb-3">
+                                <div class="img-container">
+                                    <img id="image-preview" class="img-fluid rounded" alt="Preview">
+                                </div>
+                                
+                                <div class="detection-mode mt-4">
+                                    <h5 class="text-center mb-3">Select Detection Mode</h5>
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <div class="detection-mode-card">
+                                                <input class="btn-check" type="radio" name="detection_mode" id="mode-real" value="real" checked>
+                                                <label class="detection-mode-label p-3 text-center h-100 d-flex flex-column" for="mode-real">
+                                                    <div class="mode-icon mb-2">
+                                                        <i class="fas fa-camera fa-2x"></i>
+                                                    </div>
+                                                    <h6 class="mb-2">Real Photo Mode</h6>
+                                                    <p class="text-muted small mb-0">Best for real-world photographs with realistic objects</p>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="detection-mode-card">
+                                                <input class="btn-check" type="radio" name="detection_mode" id="mode-cartoon" value="cartoon">
+                                                <label class="detection-mode-label p-3 text-center h-100 d-flex flex-column" for="mode-cartoon">
+                                                    <div class="mode-icon mb-2">
+                                                        <i class="fas fa-paint-brush fa-2x"></i>
+                                                    </div>
+                                                    <h6 class="mb-2">Cartoon Mode</h6>
+                                                    <p class="text-muted small mb-0">For animated images, drawings and cartoon content</p>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button id="upload-btn" type="submit" class="btn btn-primary" style="display: none;">
+                                    <i class="fas fa-search me-2"></i>Detect Objects
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div id="loading-container" class="loading-container">
+                            <div class="loading-spinner mb-3"></div>
+                            <p id="loading-text" class="mb-0">Analyzing image...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-dark border-0 shadow mt-4">
+            <div class="card-body">
+                <h3 class="card-title">How It Works</h3>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 bg-dark">
+                            <div class="card-body text-center">
+                                <i class="fas fa-upload fa-3x mb-3"></i>
+                                <h5>1. Upload Image</h5>
+                                <p class="text-muted">Upload any JPEG or PNG image from your device</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 bg-dark">
+                            <div class="card-body text-center">
+                                <i class="fas fa-robot fa-3x mb-3"></i>
+                                <h5>2. AI Processing</h5>
+                                <p class="text-muted">Our AI model detects objects in your image</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 bg-dark">
+                            <div class="card-body text-center">
+                                <i class="fas fa-tags fa-3x mb-3"></i>
+                                <h5>3. View Results</h5>
+                                <p class="text-muted">See identified objects with color-coded labels</p>
+                                <div class="small text-info mt-1"><i class="fas fa-info-circle"></i> Works best with real photos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-dark border-0 shadow mt-4">
+            <div class="card-body">
+                <h3 class="card-title">What Can It Detect?</h3>
+                <p class="lead">Our detection system offers two different modes:</p>
+                
+                <ul class="nav nav-tabs mb-3" id="detectionTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="photo-tab" data-bs-toggle="tab" data-bs-target="#photo-content" type="button" role="tab" aria-controls="photo-content" aria-selected="true">
+                            <i class="fas fa-camera me-1"></i> Real Photo Mode
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="cartoon-tab" data-bs-toggle="tab" data-bs-target="#cartoon-content" type="button" role="tab" aria-controls="cartoon-content" aria-selected="false">
+                            <i class="fas fa-paint-brush me-1"></i> Cartoon Mode
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="detectionTabsContent">
+                    <div class="tab-pane fade show active" id="photo-content" role="tabpanel" aria-labelledby="photo-tab">
+                        <p>The <strong>Real Photo Mode</strong> uses YOLOv5 to identify 80 different object categories:</p>
+                        <div class="alert alert-info mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Note:</strong> This model is trained on real-world photographs and may not accurately detect objects in cartoons or animations.
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="cartoon-content" role="tabpanel" aria-labelledby="cartoon-tab">
+                        <p>The <strong>Cartoon Mode</strong> uses specialized computer vision to detect animated objects:</p>
+                        <div class="alert alert-info mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Note:</strong> This experimental mode can identify basic shapes and common cartoon elements like faces, bodies, and features in animated content.
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 bg-dark">
+                            <div class="card-body">
+                                <h5><i class="fas fa-user me-2"></i>People & Animals</h5>
+                                <ul class="list-unstyled">
+                                    <li>People</li>
+                                    <li>Cats, dogs, birds</li>
+                                    <li>Horses, sheep, cows</li>
+                                    <li>Elephants, bears, zebras</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 bg-dark">
+                            <div class="card-body">
+                                <h5><i class="fas fa-car me-2"></i>Vehicles & Objects</h5>
+                                <ul class="list-unstyled">
+                                    <li>Cars, bicycles, motorcycles</li>
+                                    <li>Buses, trains, trucks, boats</li>
+                                    <li>Traffic lights, stop signs</li>
+                                    <li>Backpacks, handbags, books</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 bg-dark">
+                            <div class="card-body">
+                                <h5><i class="fas fa-home me-2"></i>Household Items</h5>
+                                <ul class="list-unstyled">
+                                    <li>TVs, laptops, cell phones</li>
+                                    <li>Chairs, couches, tables</li>
+                                    <li>Bottles, cups, utensils</li> 
+                                    <li>Refrigerators, microwaves</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+{% endblock %}
